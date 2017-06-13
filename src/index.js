@@ -4,33 +4,34 @@ import Leap from 'leapjs'
 import omit from 'lodash.omit'
 
 export class LeapProvider extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       frame: {}
     }
   }
 
-  getChildContext() {
+  getChildContext () {
     return {
       leapContextFrame: this.state.frame
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     const { options } = this.props
     Leap.loop(options, (frame) => {
       this.setState({ frame })
     })
   }
 
-  render() {
+  render () {
     const { children } = this.props
     return <div>{children}</div>
   }
 }
 
 LeapProvider.propTypes = {
+  children: PropTypes.any,
   options: PropTypes.object
 }
 
@@ -42,8 +43,7 @@ LeapProvider.childContextTypes = {
   leapContextFrame: PropTypes.object
 }
 
-
-export function withLeapContainer(WrappedComponent) {
+export function withLeapContainer (WrappedComponent) {
   const wrappedComponentName = WrappedComponent.displayName || WrappedComponent.name || 'Component'
 
   const LeapContainer = (props, context) => {
@@ -58,6 +58,10 @@ export function withLeapContainer(WrappedComponent) {
   }
 
   LeapContainer.displayName = `LeapContainer(${wrappedComponentName})`
+
+  LeapContainer.propTypes = {
+    children: PropTypes.any
+  }
 
   LeapContainer.contextTypes = {
     leapContextFrame: PropTypes.object
